@@ -31,6 +31,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:$spigotVersion")
     implementation("org.jetbrains:annotations:24.1.0")
     implementation("de.tr7zw:item-nbt-api:2.15.0")
+    implementation("org.mongodb:mongo-java-driver:3.12.14")
     annotationProcessor("org.projectlombok:lombok:$lombokVersion")
 }
 

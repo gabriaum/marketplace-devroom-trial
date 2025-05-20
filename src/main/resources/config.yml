@@ -1,1 +1,6 @@
 debug-mode: true
+database:
+  hostname: 'localhost'
+  username: 'root'
+  password: ''
+  port: 27017
