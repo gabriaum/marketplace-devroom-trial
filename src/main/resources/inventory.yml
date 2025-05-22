@@ -1,0 +1,23 @@
+market:
+  name: 'Market'
+  size: 54
+  layout:
+    - '         '
+    - ' OOOOOOO '
+    - ' OOOOOOO '
+    - ' OOOOOOO '
+    - '         '
+    - '<       >'
+  items:
+
+dark-market:
+  name: 'Dark Market'
+  size: 54
+  layout:
+    - '         '
+    - ' OOOOOOO '
+    - ' OOOOOOO '
+    - ' OOOOOOO '
+    - '         '
+    - '<       >'
+  items:

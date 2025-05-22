@@ -32,6 +32,7 @@ dependencies {
     implementation("org.jetbrains:annotations:24.1.0")
     implementation("de.tr7zw:item-nbt-api:2.15.0")
     implementation("org.mongodb:mongo-java-driver:3.12.14")
+    implementation("me.devnatan:inventory-framework-platform-bukkit:3.3.9")
     annotationProcessor("org.projectlombok:lombok:$lombokVersion")
 }
 
