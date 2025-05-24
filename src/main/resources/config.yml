@@ -1,6 +1,7 @@
 debug-mode: true
-database:
+mysql:
   hostname: 'localhost'
   username: 'root'
   password: ''
+  database: 'marketplace-devroom-trial'
   port: 27017

@@ -32,11 +32,11 @@ public class MarketMain extends JavaPlugin {
     public void onEnable() {
         try {
             this.mongoConnection = new MongoConnection(new DatabaseCredential(
-                    getConfig().getString("database.hostname"),
-                    getConfig().getString("database.username"),
-                    getConfig().getString("database.password"),
-                    getConfig().getString("database.database"),
-                    getConfig().getInt("database.port", 27017)
+                    getConfig().getString("mysql.hostname"),
+                    getConfig().getString("mysql.username"),
+                    getConfig().getString("mysql.password"),
+                    getConfig().getString("mysql.database"),
+                    getConfig().getInt("mysql.port", 27017)
             ));
             mongoConnection.connect();
         } catch (Exception ex) {
