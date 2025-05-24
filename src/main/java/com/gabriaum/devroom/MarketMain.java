@@ -5,6 +5,7 @@ import com.gabriaum.devroom.backend.database.mongodb.MongoConnection;
 import com.gabriaum.devroom.domain.controller.ProductController;
 import com.gabriaum.devroom.util.ConfigUtil;
 import com.gabriaum.devroom.util.command.CommandFramework;
+import com.google.gson.Gson;
 import lombok.Getter;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,6 +14,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MarketMain extends JavaPlugin {
     @Getter
     private static MarketMain instance;
+
+    public static final Gson GSON = new Gson();
 
     private ConfigUtil messages;
     private ConfigUtil inventory;
@@ -32,11 +35,11 @@ public class MarketMain extends JavaPlugin {
     public void onEnable() {
         try {
             this.mongoConnection = new MongoConnection(new DatabaseCredential(
-                    getConfig().getString("mysql.hostname"),
-                    getConfig().getString("mysql.username"),
-                    getConfig().getString("mysql.password"),
-                    getConfig().getString("mysql.database"),
-                    getConfig().getInt("mysql.port", 27017)
+                    getConfig().getString("mongodb.hostname"),
+                    getConfig().getString("mongodb.username"),
+                    getConfig().getString("mongodb.password"),
+                    getConfig().getString("mongodb.database"),
+                    getConfig().getInt("mongodb.port", 27017)
             ));
             mongoConnection.connect();
         } catch (Exception ex) {

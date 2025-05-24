@@ -1,7 +1,12 @@
-debug-mode: true
-mysql:
-  hostname: 'localhost'
-  username: 'root'
-  password: ''
-  database: 'marketplace-devroom-trial'
-  port: 27017
+debug-mode: true # Enable debug mode
+mongodb:
+  hostname: 'localhost' # MongoDB hostname
+  username: 'root' # MongoDB username
+  password: '' # MongoDB password
+  database: 'marketplace-devroom-trial' # MongoDB database name
+  port: 27017 # MongoDB port
+permission: # Permission settings
+  admin: 'gabriaum.marketplace.admin' # All permissions
+  command: # Command permissions
+    announce: 'gabriaum.marketplace.announce' # Announce a new item
+    open: 'gabriaum.marketplace.open' # Open the marketplace
