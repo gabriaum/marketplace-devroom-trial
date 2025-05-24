@@ -29,6 +29,7 @@ val spigotVersion = "1.21.4-R0.1-SNAPSHOT"
 dependencies {
     compileOnly("org.projectlombok:lombok:$lombokVersion")
     compileOnly("org.spigotmc:spigot-api:$spigotVersion")
+    compileOnly("com.mojang:authlib:1.5.25")
     implementation("org.jetbrains:annotations:24.1.0")
     implementation("de.tr7zw:item-nbt-api:2.15.0")
     implementation("org.mongodb:mongo-java-driver:3.12.14")

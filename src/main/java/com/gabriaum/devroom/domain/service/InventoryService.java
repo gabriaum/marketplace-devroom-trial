@@ -4,14 +4,16 @@ import com.gabriaum.devroom.MarketMain;
 import com.gabriaum.devroom.domain.inventory.InventoryData;
 import com.gabriaum.devroom.domain.inventory.annotation.ConfigColumn;
 import com.gabriaum.devroom.util.ConfigUtil;
+import lombok.Getter;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
+@Getter
 public class InventoryService {
+    private final ConfigUtil inventoryConfig = MarketMain.getInstance().getInventory();
 
     public InventoryData loadInventory(String inventoryKey) {
-        ConfigUtil inventoryConfig = MarketMain.getInstance().getInventory();
         InventoryData inventory = new InventoryData();
 
         for (Field field : InventoryData.class.getDeclaredFields()) {

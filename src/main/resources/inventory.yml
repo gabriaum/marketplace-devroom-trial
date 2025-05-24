@@ -1,4 +1,4 @@
-market:
+default-market:
   name: 'Market'
   size: 54
   layout:
@@ -21,3 +21,8 @@ dark-market:
     - '         '
     - '<       >'
   items:
+
+inventory-item-model:
+  name: '&a{name}'
+  price-format: '&fPrice: &aR$ {price}'
+  buy-format: '&aClick to buy!'
