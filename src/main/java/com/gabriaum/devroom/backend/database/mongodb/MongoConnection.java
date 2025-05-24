@@ -5,10 +5,12 @@ import com.gabriaum.devroom.backend.database.DatabaseCredential;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
+import lombok.Getter;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+@Getter
 public class MongoConnection implements Database {
     private static final String PATTERN = "([01]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])";
     private static final Pattern IP_PATTERN = Pattern.compile(PATTERN + "\\." + PATTERN + "\\." + PATTERN + "\\." + PATTERN);
