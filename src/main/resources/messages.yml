@@ -1,0 +1,3 @@
+no-permission: 'You do not have permission.'
+command:
+  default-usage: ''

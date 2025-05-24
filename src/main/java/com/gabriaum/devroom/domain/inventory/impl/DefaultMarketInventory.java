@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class InventoryDataImpl extends View {
+public class DefaultMarketInventory extends View {
     private final InventoryService service = new InventoryService();
     private final InventoryData data = service.loadInventory("default-market");
     private final State<Pagination> paginationState = lazyPaginationState(

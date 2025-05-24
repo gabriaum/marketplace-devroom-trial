@@ -2,11 +2,14 @@ package com.gabriaum.devroom;
 
 import com.gabriaum.devroom.backend.database.DatabaseCredential;
 import com.gabriaum.devroom.backend.database.mongodb.MongoConnection;
+import com.gabriaum.devroom.command.MarketCommand;
 import com.gabriaum.devroom.domain.controller.ProductController;
+import com.gabriaum.devroom.domain.inventory.impl.DefaultMarketInventory;
 import com.gabriaum.devroom.util.ConfigUtil;
 import com.gabriaum.devroom.util.command.CommandFramework;
 import com.google.gson.Gson;
 import lombok.Getter;
+import me.devnatan.inventoryframework.ViewFrame;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,6 +25,7 @@ public class MarketMain extends JavaPlugin {
     private MongoConnection mongoConnection;
     private ProductController productController;
     private CommandFramework commandFramework;
+    private ViewFrame viewFrame;
 
     @Override
     public void onLoad() {
@@ -54,7 +58,11 @@ public class MarketMain extends JavaPlugin {
 
         this.commandFramework = new CommandFramework(this);
         commandFramework.registerCommands(
+                new MarketCommand()
+        );
 
+        this.viewFrame = ViewFrame.create(this).with(
+                new DefaultMarketInventory()
         );
     }
 
