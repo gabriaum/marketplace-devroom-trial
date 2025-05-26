@@ -4,8 +4,12 @@ import com.gabriaum.devroom.MarketMain;
 import com.gabriaum.devroom.account.Account;
 import com.gabriaum.devroom.backend.data.AccountData;
 import com.gabriaum.devroom.backend.database.mongodb.MongoConnection;
+import com.gabriaum.devroom.util.json.JsonUtils;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import org.bson.Document;
 
 import java.util.ArrayList;
@@ -52,9 +56,21 @@ public class AccountDataImpl implements AccountData {
     }
 
     @Override
-    public synchronized void update(Account account, String fieldName, Object value) {
-        Document filter = new Document("uniqueId", account.getUniqueId().toString());
-        Document update = new Document("$set", new Document(fieldName, value));
-        collection.updateOne(filter, update);
+    public synchronized void update(Account account, String fieldName) {
+        JsonObject tree = MarketMain.GSON.toJsonTree(account).getAsJsonObject();
+        Document doc = collection.find(Filters.eq("uniqueId", account.getUniqueId().toString())).first();
+        if (doc != null) {
+            JsonElement value = null;
+            if (tree.has(fieldName))
+                value = tree.get(fieldName);
+
+            Document updateDoc = new Document();
+            if (value != null) {
+                Object bsonValue = JsonUtils.convertToBson(value);
+                updateDoc.append("$set", new Document(fieldName, bsonValue));
+            } else updateDoc.append("$unset", new Document(fieldName, ""));
+
+            collection.updateOne(doc, updateDoc);
+        }
     }
 }

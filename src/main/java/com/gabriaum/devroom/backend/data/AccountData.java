@@ -8,5 +8,5 @@ public interface AccountData {
     Account register(UUID uniqueId, String name);
     Account getAccount(UUID uniqueId);
     Account getAccount(String name);
-    void update(Account account, String fieldName, Object value);
+    void update(Account account, String fieldName);
 }
