@@ -2,8 +2,8 @@ package com.gabriaum.devroom.backend.database.mongodb;
 
 import com.gabriaum.devroom.backend.database.Database;
 import com.gabriaum.devroom.backend.database.DatabaseCredential;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 
@@ -17,7 +17,7 @@ public class MongoConnection implements Database {
 
     private final String url;
     private MongoClient client;
-    private com.mongodb.client.MongoDatabase database;
+    private MongoDatabase database;
 
     public MongoConnection(DatabaseCredential credential) {
         this.url = IP_PATTERN.matcher(credential.getHostName()).matches()
@@ -31,19 +31,30 @@ public class MongoConnection implements Database {
 
     @Override
     public void connect() throws Exception {
-        MongoClientURI uri = new MongoClientURI(url);
-        client = new MongoClient(uri);
-        database = client.getDatabase(Objects.requireNonNull(uri.getDatabase()));
+        client = MongoClients.create(url);
+        database = client.getDatabase(extractDatabaseNameFromUrl(url));
     }
 
     @Override
     public void disconnect() throws Exception {
-        if (isConnected())
+        if (isConnected()) {
             client.close();
+            client = null;
+            database = null;
+        }
     }
 
     @Override
     public boolean isConnected() {
         return client != null && database != null;
+    }
+
+    // Método auxiliar para extrair o nome do banco da URL
+    private String extractDatabaseNameFromUrl(String url) {
+        // Remove parâmetros ?retryWrites...
+        String base = url.split("\\?")[0];
+        // Pega a parte após a última "/"
+        String[] parts = base.split("/");
+        return parts.length > 0 ? parts[parts.length - 1] : null;
     }
 }

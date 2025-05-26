@@ -1,7 +1,7 @@
 debug-mode: true # Enable debug mode
 mongodb:
-  hostname: 'localhost' # MongoDB hostname
-  username: 'root' # MongoDB username
+  hostname: '127.0.0.1' # MongoDB hostname
+  username: '' # MongoDB username
   password: '' # MongoDB password
   database: 'marketplace-devroom-trial' # MongoDB database name
   port: 27017 # MongoDB port

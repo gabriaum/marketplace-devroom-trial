@@ -32,7 +32,7 @@ dependencies {
     compileOnly("com.mojang:authlib:1.5.25")
     implementation("org.jetbrains:annotations:24.1.0")
     implementation("de.tr7zw:item-nbt-api:2.15.0")
-    implementation("org.mongodb:mongo-java-driver:3.12.14")
+    implementation("org.mongodb:mongodb-driver-sync:5.5.0")
     implementation("me.devnatan:inventory-framework-platform-bukkit:3.3.9")
     annotationProcessor("org.projectlombok:lombok:$lombokVersion")
 }
@@ -56,7 +56,7 @@ tasks.build {
 }
 
 tasks.withType<JavaCompile> {
-    options.compilerArgs.addAll(listOf("--release", "8"))
+    options.compilerArgs.addAll(listOf("--release", "17"))
 }
 
 tasks.register<JavaCompile>("compileJava8") {

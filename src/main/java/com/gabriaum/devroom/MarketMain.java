@@ -1,10 +1,12 @@
 package com.gabriaum.devroom;
 
+import com.gabriaum.devroom.backend.data.impl.AccountDataImpl;
 import com.gabriaum.devroom.backend.database.DatabaseCredential;
 import com.gabriaum.devroom.backend.database.mongodb.MongoConnection;
 import com.gabriaum.devroom.command.MarketCommand;
 import com.gabriaum.devroom.domain.controller.ProductController;
 import com.gabriaum.devroom.domain.inventory.impl.DefaultMarketInventory;
+import com.gabriaum.devroom.listener.AccountListener;
 import com.gabriaum.devroom.util.ConfigUtil;
 import com.gabriaum.devroom.util.command.CommandFramework;
 import com.google.gson.Gson;
@@ -23,6 +25,7 @@ public class MarketMain extends JavaPlugin {
     private ConfigUtil messages;
     private ConfigUtil inventory;
     private MongoConnection mongoConnection;
+    private AccountDataImpl accountData;
     private ProductController productController;
     private CommandFramework commandFramework;
     private ViewFrame viewFrame;
@@ -46,6 +49,7 @@ public class MarketMain extends JavaPlugin {
                     getConfig().getInt("mongodb.port", 27017)
             ));
             mongoConnection.connect();
+            this.accountData = new AccountDataImpl(mongoConnection);
         } catch (Exception ex) {
             getServer().shutdown();
             throw new RuntimeException("Failed to connect to MongoDB", ex);
@@ -53,7 +57,7 @@ public class MarketMain extends JavaPlugin {
 
         this.productController = new ProductController();
         handleListeners(
-
+                new AccountListener()
         );
 
         this.commandFramework = new CommandFramework(this);

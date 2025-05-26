@@ -6,7 +6,6 @@ import com.gabriaum.devroom.domain.inventory.impl.DefaultMarketInventory;
 import com.gabriaum.devroom.util.command.CommandArgs;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class OpenArgumentHandler implements ArgumentHandler {
