@@ -14,6 +14,8 @@ import com.gabriaum.devroom.util.command.CommandFramework;
 import com.google.gson.Gson;
 import lombok.Getter;
 import me.devnatan.inventoryframework.ViewFrame;
+import net.milkbowl.vault.Vault;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -23,6 +25,9 @@ public class MarketMain extends JavaPlugin {
     private static MarketMain instance;
 
     public static final Gson GSON = new Gson();
+
+    @Getter
+    private static Economy economy = null;
 
     private ConfigUtil messages;
     private ConfigUtil inventory;
@@ -44,6 +49,8 @@ public class MarketMain extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        setupEconomy();
+
         try {
             this.mongoConnection = new MongoConnection(new DatabaseCredential(
                     getConfig().getString("mongodb.hostname"),
@@ -76,6 +83,20 @@ public class MarketMain extends JavaPlugin {
                 new DefaultMarketInventory()
         )
                 .register();
+    }
+
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            getLogger().warning("Vault plugin not found! Economy features will be disabled.");
+            return false;
+        }
+        var rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            getLogger().warning("No economy provider found! Economy features will be disabled.");
+            return false;
+        }
+        economy = rsp.getProvider();
+        return economy != null;
     }
 
     protected void handleListeners(Object... objects) {

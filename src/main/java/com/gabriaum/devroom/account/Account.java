@@ -22,6 +22,26 @@ public class Account {
         this.purchasedProducts = new HashSet<>();
     }
 
+    public void addAdvertisedProduct(Product product) {
+        this.advertisedProducts.add(product);
+        save("advertisedProducts");
+    }
+
+    public void removeAdvertisedProduct(Product product) {
+        this.advertisedProducts.remove(product);
+        save("advertisedProducts");
+    }
+
+    public void addPurchasedProduct(ProductSold productSold) {
+        this.purchasedProducts.add(productSold);
+        save("purchasedProducts");
+    }
+
+    public void removePurchasedProduct(ProductSold productSold) {
+        this.purchasedProducts.remove(productSold);
+        save("purchasedProducts");
+    }
+
     protected void save(String... fields) {
         for (String field : fields) {
             MarketMain.getInstance().getAccountData().update(this, field);

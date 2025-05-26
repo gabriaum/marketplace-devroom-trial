@@ -1,9 +1,12 @@
 package com.gabriaum.devroom.domain.inventory.impl;
 
+import com.gabriaum.devroom.MarketMain;
 import com.gabriaum.devroom.domain.inventory.InventoryData;
 import com.gabriaum.devroom.domain.service.InventoryService;
+import com.gabriaum.devroom.domain.service.ProductService;
 import com.gabriaum.devroom.product.Product;
 import com.gabriaum.devroom.product.attribute.ProductAttribute;
+import com.gabriaum.devroom.util.ConfigUtil;
 import com.gabriaum.devroom.util.stack.ItemBuilder;
 import com.gabriaum.devroom.util.stack.ItemSerializer;
 import me.devnatan.inventoryframework.View;
@@ -12,6 +15,9 @@ import me.devnatan.inventoryframework.ViewType;
 import me.devnatan.inventoryframework.component.Pagination;
 import me.devnatan.inventoryframework.context.RenderContext;
 import me.devnatan.inventoryframework.state.State;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +29,7 @@ import java.util.Objects;
 
 public class DefaultMarketInventory extends View {
     private final InventoryService service = new InventoryService();
+    private final ProductService productService = new ProductService();
     private final State<Pagination> paginationState = lazyPaginationState(
             context -> {
                 Map<String, Object> data = (Map<String, Object>) context.getInitialData();
@@ -36,6 +43,7 @@ public class DefaultMarketInventory extends View {
                 ItemBuilder itemBuilder = new ItemBuilder(item.getType());
                 itemBuilder.setName(Objects.requireNonNull(service.getInventoryConfig().getString("inventory-item-model.name"))
                         .replace("{name}", meta != null && meta.hasDisplayName() ? meta.getDisplayName() : item.getType().name()));
+
                 List<String> lore = meta != null && meta.hasLore() ? meta.getLore() : new ArrayList<>();
                 lore.add("");
                 lore.add(Objects.requireNonNull(service.getInventoryConfig().getString("inventory-item-model.price-format"))
@@ -44,7 +52,39 @@ public class DefaultMarketInventory extends View {
                 lore.add("");
                 lore.add(Objects.requireNonNull(service.getInventoryConfig().getString("inventory-item-model.buy-format")));
                 itemBuilder.setLore(lore);
-                builder.withItem(itemBuilder.build());
+                itemBuilder.setAmount(item.getAmount());
+                itemBuilder.setDurability(item.getDurability());
+                builder.withItem(itemBuilder.build())
+                        .onClick(slotClickContext -> {
+                            ConfigUtil messages = MarketMain.getInstance().getMessages();
+                            Player player = slotClickContext.getPlayer();
+                            Economy economy = MarketMain.getEconomy();
+                            if (economy == null) {
+                                MarketMain.sendDebug("Vault economy is not available. Please install Vault and an economy plugin.");
+                                return;
+                            }
+
+                            double money = economy.getBalance(player);
+                            if (money < product.getPrice()) {
+                                player.sendMessage(messages.getString("not-enough-money", "You do not have enough money to buy this product.")
+                                        .replace("{price}", String.valueOf(product.getPrice()))
+                                        .replace("{balance}", String.valueOf(money)));
+                                return;
+                            }
+
+                            Player seller = Bukkit.getPlayer(product.getAnnounceById());
+                            if (seller != null)
+                                seller.sendMessage(messages.getString("product-sold", "Your product has been sold.")
+                                        .replace("{name}", meta != null && meta.hasDisplayName() ? meta.getDisplayName() : item.getType().name())
+                                        .replace("{price}", String.valueOf(product.getPrice()))
+                                        .replace("{buyer}", player.getName()));
+
+                            productService.buy(player, product, product.getPrice());
+                            player.sendMessage(messages.getString("product-bought", "You have successfully bought the product.")
+                                    .replace("{name}", meta != null && meta.hasDisplayName() ? meta.getDisplayName() : item.getType().name())
+                                    .replace("{price}", String.valueOf(product.getPrice())));
+                            player.closeInventory();
+                        });
             });
 
     @Override
@@ -58,6 +98,7 @@ public class DefaultMarketInventory extends View {
         config.cancelOnClick();
         config.cancelOnDrag();
         config.cancelOnPickup();
+        config.scheduleUpdate(10L);
     }
 
     @Override

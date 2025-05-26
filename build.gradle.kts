@@ -11,7 +11,7 @@ group = "com.gabriaum.afterjournal"
 version = "1.0-SNAPSHOT"
 repositories {
     mavenCentral()
-
+    maven("jitpack.io")
     maven("https://repo.codemc.org/repository/maven-public/")
     maven("https://oss.sonatype.org/content/repositories/snapshot")
     maven("https://libraries.minecraft.net")
@@ -24,9 +24,11 @@ repositories {
     }
 }
 
+val localDirectory = "C://API"
 val lombokVersion = "1.18.30"
 val spigotVersion = "1.21.4-R0.1-SNAPSHOT"
 dependencies {
+    compileOnly(files("$localDirectory/Vault.jar"))
     compileOnly("org.projectlombok:lombok:$lombokVersion")
     compileOnly("org.spigotmc:spigot-api:$spigotVersion")
     compileOnly("com.mojang:authlib:1.5.25")

@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class AccountListener implements Listener {
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerLogin(PlayerLoginEvent event) {
         CompletableFuture.runAsync(() -> {
             Player player = event.getPlayer();
@@ -23,5 +23,12 @@ public class AccountListener implements Listener {
 
             MarketMain.getInstance().getAccountController().put(player.getUniqueId(), account);
         });
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerQuit(PlayerLoginEvent event) {
+        Player player = event.getPlayer();
+        MarketMain.getInstance().getAccountController().remove(player.getUniqueId());
+        MarketMain.sendDebug("Removed account for player: " + player.getName());
     }
 }

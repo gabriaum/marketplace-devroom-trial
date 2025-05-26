@@ -12,5 +12,5 @@ public class ProductSold {
     private final Product product;
     private final UUID purchasedById;
     private final String purchaseByName;
-    private final int price;
+    private final double price;
 }
