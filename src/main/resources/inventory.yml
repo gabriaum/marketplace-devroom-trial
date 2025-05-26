@@ -1,6 +1,6 @@
 default-market:
   name: 'Market'
-  size: 54
+  size: 6
   layout:
     - '         '
     - ' OOOOOOO '

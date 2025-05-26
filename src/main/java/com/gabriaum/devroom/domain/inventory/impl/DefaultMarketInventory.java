@@ -20,7 +20,6 @@ import java.util.Objects;
 
 public class DefaultMarketInventory extends View {
     private final InventoryService service = new InventoryService();
-    private final InventoryData data = service.loadInventory("default-market");
     private final State<Pagination> paginationState = lazyPaginationState(
             context -> {
                 Map<String, Object> data = (Map<String, Object>) context.getInitialData();
@@ -44,6 +43,10 @@ public class DefaultMarketInventory extends View {
 
     @Override
     public void onInit(@NotNull ViewConfigBuilder config) {
+        InventoryData data = service.loadInventory("default-market");
+        if (data == null)
+            throw new IllegalStateException("Inventory data for 'default-market' not found.");
+        System.out.println("Loading inventory data: " + data.getTitle());
         config.title(data.getTitle());
         config.size(data.getSize());
         config.type(ViewType.CHEST);

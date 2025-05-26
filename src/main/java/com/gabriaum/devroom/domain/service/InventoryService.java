@@ -43,6 +43,8 @@ public class InventoryService {
                 ex.printStackTrace();
             }
         }
+        MarketMain.sendDebug("Loaded inventory: " + inventoryKey + " with title: " + inventory.getTitle() + " and size: " + inventory.getSize());
+        MarketMain.sendDebug("GSON> " + MarketMain.GSON.toJsonTree(inventory));
 
         return inventory;
     }

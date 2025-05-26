@@ -71,7 +71,8 @@ public class MarketMain extends JavaPlugin {
 
         this.viewFrame = ViewFrame.create(this).with(
                 new DefaultMarketInventory()
-        );
+        )
+                .register();
     }
 
     protected void handleListeners(Object... objects) {
