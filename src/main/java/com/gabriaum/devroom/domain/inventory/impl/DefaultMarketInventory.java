@@ -56,5 +56,6 @@ public class DefaultMarketInventory extends View {
 
     @Override
     public void onFirstRender(@NotNull RenderContext render) {
+
     }
 }

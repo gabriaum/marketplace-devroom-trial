@@ -17,11 +17,9 @@ public class AccountDataImpl implements AccountData {
 
     public AccountDataImpl(MongoConnection connection) {
         MongoDatabase database = connection.getDatabase();
-
         List<String> collections = database.listCollectionNames().into(new ArrayList<>());
         if (!collections.contains("accounts"))
             database.createCollection("accounts");
-
 
         this.collection = database.getCollection("accounts");
     }
@@ -29,8 +27,7 @@ public class AccountDataImpl implements AccountData {
     @Override
     public synchronized Account register(UUID uniqueId, String name) {
         Account account = new Account(uniqueId, name);
-        Document document = new Document("uniqueId", uniqueId.toString())
-                .append("name", name);
+        Document document = Document.parse(MarketMain.GSON.toJson(account));
         collection.insertOne(document);
         MarketMain.getInstance().getLogger().info("Account registered for player: " + name);
         return account;
