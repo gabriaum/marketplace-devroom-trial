@@ -4,10 +4,8 @@ not-enough-money: 'You do not have enough money.'
 product-bought: 'You have bought {name} for {price}.'
 product-sold: 'You have sold {name} for {price} to {buyer}.'
 command:
-  default-usage: '&cUsage: /{label} <open, announce>'
-  open:
-    default-usage: '&cUsage: /{label} open <normal, dark>'
-  announce:
+  sell:
+    default-usage: '&cUsage: /{label} <price>'
     success: 'Announcement sent successfully!'
     invalid_price_format: 'Invalid price format. Please use a valid number.'
     invalid_price: 'Invalid price. Price must be greater than 0.'

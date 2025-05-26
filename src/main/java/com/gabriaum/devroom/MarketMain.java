@@ -5,6 +5,7 @@ import com.gabriaum.devroom.backend.data.impl.ProductDataImpl;
 import com.gabriaum.devroom.backend.database.DatabaseCredential;
 import com.gabriaum.devroom.backend.database.mongodb.MongoConnection;
 import com.gabriaum.devroom.command.MarketCommand;
+import com.gabriaum.devroom.command.SellCommand;
 import com.gabriaum.devroom.domain.controller.AccountController;
 import com.gabriaum.devroom.domain.controller.ProductController;
 import com.gabriaum.devroom.domain.inventory.impl.DefaultMarketInventory;
@@ -76,13 +77,12 @@ public class MarketMain extends JavaPlugin {
 
         this.commandFramework = new CommandFramework(this);
         commandFramework.registerCommands(
-                new MarketCommand()
+                new MarketCommand(), new SellCommand()
         );
 
         this.viewFrame = ViewFrame.create(this).with(
                 new DefaultMarketInventory()
-        )
-                .register();
+        ).register();
     }
 
     private boolean setupEconomy() {

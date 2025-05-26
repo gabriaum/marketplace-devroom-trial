@@ -44,7 +44,6 @@ bukkit {
     version = gitVersion()
     author = "gabriaum"
     main = "com.gabriaum.devroom.MarketMain"
-    apiVersion = "1.21.4"
     depend = listOf("Vault")
 }
 

@@ -1,6 +1,5 @@
 package com.gabriaum.devroom.product;
 
-import com.gabriaum.devroom.product.attribute.ProductAttribute;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

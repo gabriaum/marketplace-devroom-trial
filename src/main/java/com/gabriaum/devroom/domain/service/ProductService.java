@@ -46,6 +46,6 @@ public class ProductService {
         }
 
         if (drop) player.getWorld().dropItem(player.getLocation(), item);
-         else player.getInventory().addItem(item);
+        else player.getInventory().addItem(item);
     }
 }

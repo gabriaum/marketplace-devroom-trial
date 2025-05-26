@@ -9,6 +9,25 @@ default-market:
     - '         '
     - '<       >'
   items:
+    empty:
+      slot: 22
+      name: '&cNo items available'
+      lore:
+        - '&7There are no items available for sale.'
+        - '&7Please check back later.'
+      material: 'BARRIER'
+    previous-page:
+      slot: 45
+      name: '&aPrevious Page'
+      lore:
+        - '&7Click to go to the previous page.'
+      material: 'ARROW'
+    next-page:
+      slot: 53
+      name: '&aNext Page'
+      lore:
+        - '&7Click to go to the next page.'
+      material: 'ARROW'
 
 dark-market:
   name: 'Dark Market'
@@ -21,6 +40,25 @@ dark-market:
     - '         '
     - '<       >'
   items:
+    empty:
+      slot: 22
+      name: '&cNo items available'
+      lore:
+        - '&7There are no items available for sale.'
+        - '&7Please check back later.'
+      material: 'BARRIER'
+    previous-page:
+      slot: 45
+      name: '&aPrevious Page'
+      lore:
+        - '&7Click to go to the previous page.'
+      material: 'ARROW'
+    next-page:
+      slot: 53
+      name: '&aNext Page'
+      lore:
+        - '&7Click to go to the next page.'
+      material: 'ARROW'
 
 inventory-item-model:
   name: '&a{name}'

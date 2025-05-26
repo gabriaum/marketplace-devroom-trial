@@ -1,50 +1,49 @@
-package com.gabriaum.devroom.command.handler.impl;
+package com.gabriaum.devroom.command;
 
 import com.gabriaum.devroom.MarketMain;
 import com.gabriaum.devroom.account.Account;
-import com.gabriaum.devroom.command.handler.ArgumentHandler;
 import com.gabriaum.devroom.product.Product;
+import com.gabriaum.devroom.util.ConfigUtil;
+import com.gabriaum.devroom.util.command.Command;
 import com.gabriaum.devroom.util.command.CommandArgs;
 import com.gabriaum.devroom.util.stack.ItemSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class AnnounceArgumentHandler implements ArgumentHandler {
-    @Override
-    public String getName() {
-        return "announce";
-    }
+public class SellCommand {
 
-    @Override
-    public void execute(CommandArgs commandArgs) {
+    @Command(name = "sell", permission = "marketplace.sell", inGameOnly = true)
+    public void sellCommand(CommandArgs commandArgs) {
+        ConfigUtil messages = MarketMain.getInstance().getMessages();
         Player player = commandArgs.getPlayer();
         Account account = Account.getAccount(player.getUniqueId());
         if (account == null) {
-            player.sendMessage(getMessages().getString("account_not_found", "§cAccount not found!"));
+            player.sendMessage(messages.getString("account_not_found", "§cAccount not found!"));
             return;
         }
 
         String[] args = commandArgs.getArgs();
-        if (args.length < 2) {
-            player.sendMessage("§cUsage: /" + commandArgs.getLabel() + " announce <price>");
+        if (args.length < 1) {
+            player.sendMessage(messages.getString("command.sell.default-usage", "§cUsage: /sell <price>")
+                    .replace("{label}", commandArgs.getLabel()));
             return;
         }
 
-        String priceFormat = args[1];
+        String priceFormat = args[0];
         if (!priceFormat.matches("[0-9]+")) {
-            player.sendMessage(getMessages().getString("command.announce.invalid_price_format", "§cInvalid price format!"));
+            player.sendMessage(messages.getString("command.sell.invalid_price_format", "§cInvalid price format!"));
             return;
         }
 
         int price = Integer.parseInt(priceFormat);
         if (price <= 0) {
-            player.sendMessage(getMessages().getString("command.announce.invalid_price", "§cPrice must be greater than 0!"));
+            player.sendMessage(messages.getString("command.sell.invalid_price", "§cPrice must be greater than 0!"));
             return;
         }
 
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item.getType().isAir()) {
-            player.sendMessage(getMessages().getString("command.announce.no_item", "§cYou must hold an item in your hand to announce!"));
+            player.sendMessage(messages.getString("command.sell.no_item", "§cYou must hold an item in your hand to announce!"));
             return;
         }
 
@@ -58,6 +57,6 @@ public class AnnounceArgumentHandler implements ArgumentHandler {
         player.getInventory().setItemInMainHand(null);
         player.updateInventory();
         MarketMain.getInstance().getProductController().add(product);
-        player.sendMessage(getMessages().getString("command.announce.success", "§aItem announced successfully!"));
+        player.sendMessage(messages.getString("command.sell.success", "§aItem announced successfully!"));
     }
 }
