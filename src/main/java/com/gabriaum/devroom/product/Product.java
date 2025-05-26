@@ -15,7 +15,7 @@ public class Product {
     private final String id = RandomStringUtils.randomAlphanumeric(8);
     private UUID announceById;
     private String announceByName;
-    private ProductAttribute attribute;
+    private String serializedItem;
     private int price;
     private int amount;
 }

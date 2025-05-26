@@ -5,12 +5,15 @@ import com.gabriaum.devroom.domain.service.InventoryService;
 import com.gabriaum.devroom.product.Product;
 import com.gabriaum.devroom.product.attribute.ProductAttribute;
 import com.gabriaum.devroom.util.stack.ItemBuilder;
+import com.gabriaum.devroom.util.stack.ItemSerializer;
 import me.devnatan.inventoryframework.View;
 import me.devnatan.inventoryframework.ViewConfigBuilder;
 import me.devnatan.inventoryframework.ViewType;
 import me.devnatan.inventoryframework.component.Pagination;
 import me.devnatan.inventoryframework.context.RenderContext;
 import me.devnatan.inventoryframework.state.State;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -26,14 +29,17 @@ public class DefaultMarketInventory extends View {
                 if (data == null) return new ArrayList<>();
                 return (ArrayList<Product>) data.get("items");
             }, (context, builder, index, product) -> {
-                ProductAttribute attribute = product.getAttribute();
-                ItemBuilder itemBuilder = new ItemBuilder(attribute.getMaterial());
+                ItemStack item = ItemSerializer.read(product.getSerializedItem());
+                if (item == null) return;
+
+                ItemMeta meta = item.getItemMeta();
+                ItemBuilder itemBuilder = new ItemBuilder(item.getType());
                 itemBuilder.setName(Objects.requireNonNull(service.getInventoryConfig().getString("inventory-item-model.name"))
-                        .replace("{name}", attribute.getName()));
-                List<String> lore = attribute.getLore();
+                        .replace("{name}", meta != null && meta.hasDisplayName() ? meta.getDisplayName() : item.getType().name()));
+                List<String> lore = meta != null && meta.hasLore() ? meta.getLore() : new ArrayList<>();
                 lore.add("");
                 lore.add(Objects.requireNonNull(service.getInventoryConfig().getString("inventory-item-model.price-format"))
-                        .replace("{name}", attribute.getName())
+                        .replace("{name}", meta != null && meta.hasDisplayName() ? meta.getDisplayName() : item.getType().name())
                         .replace("{price}", String.valueOf(product.getPrice())));
                 lore.add("");
                 lore.add(Objects.requireNonNull(service.getInventoryConfig().getString("inventory-item-model.buy-format")));
@@ -44,9 +50,6 @@ public class DefaultMarketInventory extends View {
     @Override
     public void onInit(@NotNull ViewConfigBuilder config) {
         InventoryData data = service.loadInventory("default-market");
-        if (data == null)
-            throw new IllegalStateException("Inventory data for 'default-market' not found.");
-        System.out.println("Loading inventory data: " + data.getTitle());
         config.title(data.getTitle());
         config.size(data.getSize());
         config.type(ViewType.CHEST);

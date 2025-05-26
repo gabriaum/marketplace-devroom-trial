@@ -2,9 +2,12 @@ package com.gabriaum.devroom.command;
 
 import com.gabriaum.devroom.MarketMain;
 import com.gabriaum.devroom.command.handler.ArgumentHandler;
+import com.gabriaum.devroom.command.handler.impl.AnnounceArgumentHandler;
+import com.gabriaum.devroom.command.handler.impl.OpenArgumentHandler;
 import com.gabriaum.devroom.util.ConfigUtil;
 import com.gabriaum.devroom.util.command.Command;
 import com.gabriaum.devroom.util.command.CommandArgs;
+import com.gabriaum.devroom.util.command.Completer;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -15,7 +18,8 @@ public class MarketCommand {
 
     public MarketCommand() {
         this.argumentHandlers = List.of(
-
+                new OpenArgumentHandler(),
+                new AnnounceArgumentHandler()
         );
     }
 
@@ -41,6 +45,18 @@ public class MarketCommand {
         }
 
         argumentHandler.execute(commandArgs);
+    }
+
+    @Completer(name = "marketplace")
+    public List<String> complete(CommandArgs commandArgs) {
+        String[] args = commandArgs.getArgs();
+        if (args.length == 1) {
+            return argumentHandlers.stream()
+                    .map(ArgumentHandler::getName)
+                    .filter(name -> name.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .toList();
+        }
+        return List.of();
     }
 
     protected ArgumentHandler getArgumentHandler(String name) {

@@ -5,6 +5,7 @@ import com.gabriaum.devroom.backend.data.impl.ProductDataImpl;
 import com.gabriaum.devroom.backend.database.DatabaseCredential;
 import com.gabriaum.devroom.backend.database.mongodb.MongoConnection;
 import com.gabriaum.devroom.command.MarketCommand;
+import com.gabriaum.devroom.domain.controller.AccountController;
 import com.gabriaum.devroom.domain.controller.ProductController;
 import com.gabriaum.devroom.domain.inventory.impl.DefaultMarketInventory;
 import com.gabriaum.devroom.listener.AccountListener;
@@ -28,6 +29,7 @@ public class MarketMain extends JavaPlugin {
     private MongoConnection mongoConnection;
     private AccountDataImpl accountData;
     private ProductDataImpl productData;
+    private AccountController accountController;
     private ProductController productController;
     private CommandFramework commandFramework;
     private ViewFrame viewFrame;
@@ -58,6 +60,7 @@ public class MarketMain extends JavaPlugin {
             throw new RuntimeException("Failed to connect to MongoDB", ex);
         }
 
+        this.accountController = new AccountController();
         this.productController = new ProductController();
         this.productController.addAll(productData.getProducts());
         handleListeners(
