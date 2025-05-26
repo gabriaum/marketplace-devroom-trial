@@ -17,9 +17,11 @@ public class AccountListener implements Listener {
             Player player = event.getPlayer();
             Account account = MarketMain.getInstance().getAccountData().getAccount(player.getUniqueId());
             if (account == null) {
-                System.out.println("Creating new account for player: " + player.getName());
+                MarketMain.sendDebug("Creating new account for player: " + player.getName());
                 account = MarketMain.getInstance().getAccountData().register(player.getUniqueId(), player.getName());
             }
+
+            MarketMain.getInstance().getAccountController().put(player.getUniqueId(), account);
         });
     }
 }

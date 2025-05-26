@@ -1,5 +1,6 @@
 package com.gabriaum.devroom.account;
 
+import com.gabriaum.devroom.MarketMain;
 import com.gabriaum.devroom.account.sold.ProductSold;
 import com.gabriaum.devroom.product.Product;
 import lombok.Getter;
@@ -23,7 +24,11 @@ public class Account {
 
     protected void save(String... fields) {
         for (String field : fields) {
-
+            MarketMain.getInstance().getAccountData().update(this, field);
         }
+    }
+
+    public static Account getAccount(UUID uniqueId) {
+        return MarketMain.getInstance().getAccountController().get(uniqueId);
     }
 }

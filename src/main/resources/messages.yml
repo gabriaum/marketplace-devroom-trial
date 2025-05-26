@@ -1,3 +1,9 @@
 no-permission: 'You do not have permission.'
+account_not_found: 'Account not found.'
 command:
   default-usage: ''
+  announce:
+    success: 'Announcement sent successfully!'
+    invalid_price_format: 'Invalid price format. Please use a valid number.'
+    invalid_price: 'Invalid price. Price must be greater than 0.'
+    no_item: 'You must hold an item in your hand to announce!'
