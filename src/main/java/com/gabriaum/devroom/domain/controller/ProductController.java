@@ -14,11 +14,7 @@ public class ProductController extends ArrayList<Product> {
         Account account = Account.getAccount(product.getAnnounceById());
         if (account == null) throw new IllegalArgumentException("Account not found for the product announcer ID: " + product.getAnnounceById());
 
-        CompletableFuture.runAsync(() -> {
-            account.addAdvertisedProduct(product);
-            MarketMain.getInstance().getProductData().register(product);
-        });
-
+        CompletableFuture.runAsync(() -> MarketMain.getInstance().getProductData().register(product));
         return super.add(product);
     }
 }

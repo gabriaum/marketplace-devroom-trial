@@ -22,9 +22,8 @@ public class ProductService {
                 sellerAccount = MarketMain.getInstance().getAccountData().getAccount(player.getUniqueId());
 
             ProductSold sold = new ProductSold(product, player.getUniqueId(), player.getName(), buyPrice);
-            account.addPurchasedProduct(sold);
-            sellerAccount.addPurchasedProduct(sold);
-            sellerAccount.removeAdvertisedProduct(product);
+            sellerAccount.addGrossProfit(buyPrice);
+            MarketMain.getInstance().getTransactionData().register(sold);
             MarketMain.getInstance().getProductData().unregister(product);
             MarketMain.getInstance().getProductController().removeIf(p -> p.getId().equals(product.getId()));
         });
