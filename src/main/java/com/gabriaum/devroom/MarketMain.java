@@ -5,18 +5,22 @@ import com.gabriaum.devroom.backend.data.impl.ProductDataImpl;
 import com.gabriaum.devroom.backend.data.impl.TransactionDataImpl;
 import com.gabriaum.devroom.backend.database.DatabaseCredential;
 import com.gabriaum.devroom.backend.database.mongodb.MongoConnection;
+import com.gabriaum.devroom.command.BlackMarketCommand;
 import com.gabriaum.devroom.command.MarketCommand;
 import com.gabriaum.devroom.command.SellCommand;
+import com.gabriaum.devroom.command.TransactionsCommand;
 import com.gabriaum.devroom.domain.controller.AccountController;
 import com.gabriaum.devroom.domain.controller.ProductController;
+import com.gabriaum.devroom.domain.inventory.impl.ConfirmTransactionInventory;
+import com.gabriaum.devroom.domain.inventory.impl.BlackMarketInventory;
 import com.gabriaum.devroom.domain.inventory.impl.DefaultMarketInventory;
+import com.gabriaum.devroom.domain.inventory.impl.TransactionInventory;
 import com.gabriaum.devroom.listener.AccountListener;
 import com.gabriaum.devroom.util.ConfigUtil;
 import com.gabriaum.devroom.util.command.CommandFramework;
 import com.google.gson.Gson;
 import lombok.Getter;
 import me.devnatan.inventoryframework.ViewFrame;
-import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -80,11 +84,13 @@ public class MarketMain extends JavaPlugin {
 
         this.commandFramework = new CommandFramework(this);
         commandFramework.registerCommands(
-                new MarketCommand(), new SellCommand()
+                new MarketCommand(), new SellCommand(), new TransactionsCommand(),
+                new BlackMarketCommand()
         );
 
         this.viewFrame = ViewFrame.create(this).with(
-                new DefaultMarketInventory()
+                new TransactionInventory(), new DefaultMarketInventory(), new BlackMarketInventory(),
+                new ConfirmTransactionInventory()
         ).register();
     }
 

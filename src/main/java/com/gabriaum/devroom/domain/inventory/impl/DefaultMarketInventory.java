@@ -57,34 +57,11 @@ public class DefaultMarketInventory extends View {
                 itemBuilder.setDurability(item.getDurability());
                 builder.withItem(itemBuilder.build())
                         .onClick(slotClickContext -> {
-                            ConfigUtil messages = MarketMain.getInstance().getMessages();
-                            Player player = slotClickContext.getPlayer();
-                            Economy economy = MarketMain.getEconomy();
-                            if (economy == null) {
-                                MarketMain.sendDebug("Vault economy is not available. Please install Vault and an economy plugin.");
-                                return;
-                            }
-
-                            double money = economy.getBalance(player);
-                            if (money < product.getPrice()) {
-                                player.sendMessage(messages.getString("not-enough-money", "You do not have enough money to buy this product.")
-                                        .replace("{price}", String.valueOf(product.getPrice()))
-                                        .replace("{balance}", String.valueOf(money)));
-                                return;
-                            }
-
-                            Player seller = Bukkit.getPlayer(product.getAnnounceById());
-                            if (seller != null)
-                                seller.sendMessage(messages.getString("product-sold", "Your product has been sold.")
-                                        .replace("{name}", meta != null && meta.hasDisplayName() ? meta.getDisplayName() : item.getType().name())
-                                        .replace("{price}", String.valueOf(product.getPrice()))
-                                        .replace("{buyer}", player.getName()));
-
-                            productService.buy(player, product, product.getPrice());
-                            player.sendMessage(messages.getString("product-bought", "You have successfully bought the product.")
-                                    .replace("{name}", meta != null && meta.hasDisplayName() ? meta.getDisplayName() : item.getType().name())
-                                    .replace("{price}", String.valueOf(product.getPrice())));
-                            player.closeInventory();
+                            double price = product.getPrice();
+                            context.openForPlayer(ConfirmTransactionInventory.class, Map.of(
+                                    "product", product,
+                                    "price", price
+                            ));
                         });
             });
 
@@ -102,12 +79,14 @@ public class DefaultMarketInventory extends View {
         config.scheduleUpdate(10L);
     }
 
-
-
     @Override
     public void onFirstRender(@NotNull RenderContext render) {
         ConfigUtil inventoryConfig = MarketMain.getInstance().getInventory();
-        if (MarketMain.getInstance().getProductController().isEmpty()) {
+        Map<String, Object> initialData = (Map<String, Object>) render.getInitialData();
+        if (initialData == null) return;
+
+        List<Product> products = (List<Product>) initialData.get("items");
+        if (products.isEmpty()) {
             if (inventoryConfig.contains("default-market.items.empty")) {
                 String path = "default-market.items.empty.";
                 int slot = inventoryConfig.getInt(path + "slot", 0);

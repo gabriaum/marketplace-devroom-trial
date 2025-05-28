@@ -10,3 +10,30 @@ permission: # Permission settings
   command: # Command permissions
     announce: 'gabriaum.marketplace.announce' # Announce a new item
     open: 'gabriaum.marketplace.open' # Open the marketplace
+
+discord:
+  webhook:
+    enabled: true
+    url: 'https://discord.com/api/webhooks/1377159617334738954/P0Gl5UFNxLqPjde4gJy3_-V4b4RoTq_CUdhPbt9Ei4lfSRq0gto3qcnPey604_CQiNPD'
+  embed:
+    title: 'New Marketplace Item'
+    description: 'A new item has been announced in the marketplace.'
+    color: 16777215 # White color
+    footer: 'Marketplace Announcement'
+    username: 'Marketplace Bot'
+    fields:
+      - name: "Item Type"
+        value: "{item}"
+        inline: true
+      - name: "Seller"
+        value: "{seller}"
+        inline: true
+      - name: "Buyer"
+        value: "{buyer}"
+        inline: true
+      - name: "Price"
+        value: "$ {price}"
+        inline: true
+      - name: "Listed At"
+        value: "{date}"
+        inline: true

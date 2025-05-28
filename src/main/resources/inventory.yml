@@ -1,3 +1,22 @@
+confirm:
+  name: 'Confirm Purchase'
+  size: 3
+  items:
+    confirm:
+      slot: 11
+      name: '&aConfirm Purchase'
+      lore:
+        - '&7Click to confirm your purchase.'
+        - '&7You will receive the item in your inventory.'
+      material: 'GREEN_WOOL'
+    cancel:
+      slot: 15
+      name: '&cCancel Purchase'
+      lore:
+        - '&7Click to cancel your purchase.'
+        - '&7You will not receive the item.'
+      material: 'RED_WOOL'
+
 default-market:
   name: 'Market'
   size: 6
@@ -29,9 +48,9 @@ default-market:
         - '&7Click to go to the next page.'
       material: 'ARROW'
 
-dark-market:
-  name: 'Dark Market'
-  size: 54
+black-market:
+  name: 'Black Market'
+  size: 6
   layout:
     - '         '
     - ' OOOOOOO '
@@ -64,3 +83,43 @@ inventory-item-model:
   name: '&a{name}'
   price-format: '&fPrice: &aR$ {price}'
   buy-format: '&aClick to buy!'
+
+## ONLY TRANSACTION
+transaction:
+  name: 'Transactions'
+  size: 6
+  layout:
+    - '         '
+    - ' OOOOOOO '
+    - ' OOOOOOO '
+    - ' OOOOOOO '
+    - '         '
+    - '<       >'
+  items:
+    model:
+      name: '&c{id}'
+      lore:
+        - '&7Purchased on: &e{date}'
+        - '&7Purchased by: &e{purchased_by_name}'
+        - '&7Sold by: &e{seller_by_name}'
+        - ''
+        - '&7Price: &aR$ {price}'
+    empty:
+      slot: 22
+      name: '&cNo transactions found'
+      lore:
+        - '&7There are no transactions available.'
+        - '&7Please check back later.'
+      material: 'BARRIER'
+    previous-page:
+      slot: 45
+      name: '&aPrevious Page'
+      lore:
+        - '&7Click to go to the previous page.'
+      material: 'ARROW'
+    next-page:
+      slot: 52
+      name: '&aNext Page'
+      lore:
+        - '&7Click to go to the next page.'
+      material: 'ARROW'

@@ -3,6 +3,8 @@ account_not_found: 'Account not found.'
 not-enough-money: 'You do not have enough money.'
 product-bought: 'You have bought {name} for {price}.'
 product-sold: 'You have sold {name} for {price} to {buyer}.'
+confirm:
+  cancelled: '&cTransaction cancelled.'
 command:
   sell:
     default-usage: '&cUsage: /{label} <price>'

@@ -12,7 +12,6 @@ import me.devnatan.inventoryframework.View;
 import me.devnatan.inventoryframework.ViewConfigBuilder;
 import me.devnatan.inventoryframework.ViewType;
 import me.devnatan.inventoryframework.component.Pagination;
-import me.devnatan.inventoryframework.context.OpenContext;
 import me.devnatan.inventoryframework.context.RenderContext;
 import me.devnatan.inventoryframework.state.State;
 import net.milkbowl.vault.economy.Economy;
@@ -28,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class DarkMarketInventory extends View {
+public class BlackMarketInventory extends View {
     private final InventoryService service = new InventoryService();
     private final ProductService productService = new ProductService();
     private final State<Pagination> paginationState = lazyPaginationState(
@@ -49,7 +48,7 @@ public class DarkMarketInventory extends View {
                 lore.add("");
                 lore.add(Objects.requireNonNull(service.getInventoryConfig().getString("inventory-item-model.price-format"))
                         .replace("{name}", meta != null && meta.hasDisplayName() ? meta.getDisplayName() : item.getType().name())
-                        .replace("{price}", String.valueOf(product.getPrice())));
+                        .replace("{price}", String.valueOf(product.getPrice() / 2)));
                 lore.add("");
                 lore.add(Objects.requireNonNull(service.getInventoryConfig().getString("inventory-item-model.buy-format")));
                 itemBuilder.setLore(lore);
@@ -57,40 +56,17 @@ public class DarkMarketInventory extends View {
                 itemBuilder.setDurability(item.getDurability());
                 builder.withItem(itemBuilder.build())
                         .onClick(slotClickContext -> {
-                            ConfigUtil messages = MarketMain.getInstance().getMessages();
-                            Player player = slotClickContext.getPlayer();
-                            Economy economy = MarketMain.getEconomy();
-                            if (economy == null) {
-                                MarketMain.sendDebug("Vault economy is not available. Please install Vault and an economy plugin.");
-                                return;
-                            }
-
-                            double money = economy.getBalance(player);
-                            if (money < product.getPrice()) {
-                                player.sendMessage(messages.getString("not-enough-money", "You do not have enough money to buy this product.")
-                                        .replace("{price}", String.valueOf(product.getPrice() / 2))
-                                        .replace("{balance}", String.valueOf(money)));
-                                return;
-                            }
-
-                            Player seller = Bukkit.getPlayer(product.getAnnounceById());
-                            if (seller != null)
-                                seller.sendMessage(messages.getString("product-sold", "Your product has been sold.")
-                                        .replace("{name}", meta != null && meta.hasDisplayName() ? meta.getDisplayName() : item.getType().name())
-                                        .replace("{price}", String.valueOf(product.getPrice() / 2))
-                                        .replace("{buyer}", player.getName()));
-
-                            productService.buy(player, product, product.getPrice());
-                            player.sendMessage(messages.getString("product-bought", "You have successfully bought the product.")
-                                    .replace("{name}", meta != null && meta.hasDisplayName() ? meta.getDisplayName() : item.getType().name())
-                                    .replace("{price}", String.valueOf(product.getPrice() / 2)));
-                            player.closeInventory();
+                            double price = product.getPrice() / 2;
+                            context.openForPlayer(ConfirmTransactionInventory.class, Map.of(
+                                    "product", product,
+                                    "price", price
+                            ));
                         });
             });
 
     @Override
     public void onInit(@NotNull ViewConfigBuilder config) {
-        InventoryData data = service.loadInventory("dark-market");
+        InventoryData data = service.loadInventory("black-market");
         config.title(data.getTitle());
         config.size(data.getSize());
         config.type(ViewType.CHEST);
@@ -102,14 +78,16 @@ public class DarkMarketInventory extends View {
         config.scheduleUpdate(10L);
     }
 
-
-
     @Override
     public void onFirstRender(@NotNull RenderContext render) {
         ConfigUtil inventoryConfig = MarketMain.getInstance().getInventory();
-        if (MarketMain.getInstance().getProductController().isEmpty()) {
-            if (inventoryConfig.contains("dark-market.items.empty")) {
-                String path = "dark-market.items.empty.";
+        Map<String, Object> initialData = (Map<String, Object>) render.getInitialData();
+        if (initialData == null) return;
+
+        List<Product> products = (List<Product>) initialData.get("items");
+        if (products.isEmpty()) {
+            if (inventoryConfig.contains("black-market.items.empty")) {
+                String path = "black-market.items.empty.";
                 int slot = inventoryConfig.getInt(path + "slot", 0);
                 Material material = Material.getMaterial(inventoryConfig.getString(path + "material", "BARRIER"));
                 String name = inventoryConfig.getString(path + "name", "No products available");
@@ -127,8 +105,8 @@ public class DarkMarketInventory extends View {
         if (pagination == null) return;
 
         if (pagination.canAdvance()) {
-            if (inventoryConfig.contains("dark-market.items.next-page")) {
-                String path = inventoryConfig.getString("dark-market.items.next-page.");
+            if (inventoryConfig.contains("black-market.items.next-page")) {
+                String path = inventoryConfig.getString("black-market.items.next-page.");
                 int slot = inventoryConfig.getInt(path + "slot", 1);
                 Material material = Material.getMaterial(inventoryConfig.getString(path + "material", "ARROW"));
                 String name = inventoryConfig.getString(path + "name", "&aNext Page");
@@ -145,8 +123,8 @@ public class DarkMarketInventory extends View {
         }
 
         if (pagination.canBack()) {
-            if (inventoryConfig.contains("dark-market.items.previous-page")) {
-                String path = inventoryConfig.getString("dark-market.items.previous-page.");
+            if (inventoryConfig.contains("black-market.items.previous-page")) {
+                String path = inventoryConfig.getString("black-market.items.previous-page.");
                 int slot = inventoryConfig.getInt(path + "slot", 0);
                 Material material = Material.getMaterial(inventoryConfig.getString(path + "material", "ARROW"));
                 String name = inventoryConfig.getString(path + "name", "&aPrevious Page");

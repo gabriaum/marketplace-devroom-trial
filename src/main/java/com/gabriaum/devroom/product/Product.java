@@ -15,6 +15,7 @@ public class Product {
     private UUID announceById;
     private String announceByName;
     private String serializedItem;
-    private int price;
+    private double price;
     private int amount;
+    private final long createdAt = System.currentTimeMillis();
 }

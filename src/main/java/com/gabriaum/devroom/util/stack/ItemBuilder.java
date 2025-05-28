@@ -31,10 +31,6 @@ public class ItemBuilder {
 	public ItemBuilder(String material){
 		final boolean skull = material.startsWith("eyJ0");
 		is = new ItemStack(skull ? Material.PLAYER_HEAD : Material.valueOf(material), 1);
-		if(skull){
-			is.setDurability((short) 3);
-			setSkull(material);
-		}
 	}
 
 	public ItemBuilder(ItemStack is) {
@@ -108,24 +104,6 @@ public class ItemBuilder {
 
 		is.removeEnchantment(ench);
 
-		return this;
-
-	}
-
-	public ItemBuilder setSkullOwner(String nick) {
-		try {
-			if(cacheSkull.containsKey(nick)){
-				is.setItemMeta(cacheSkull.get(nick));
-				return this;
-			}
-
-			SkullMeta im = (SkullMeta) is.getItemMeta();
-			im.setOwner(nick);
-			is.setItemMeta(im);
-			cacheSkull.put(nick, im);
-			is.setDurability((short) 3);
-		} catch (ClassCastException expected) {
-		}
 		return this;
 
 	}
@@ -352,28 +330,6 @@ public class ItemBuilder {
 		final ItemMeta meta = is.getItemMeta();
 		meta.setCustomModelData(model);
 		is.setItemMeta(meta);
-		return this;
-	}
-
-	public ItemBuilder setSkull(String url){
-
-		SkullMeta headMeta = (SkullMeta) is.getItemMeta();
-		if(cacheSkull.containsKey(url)){
-			is.setItemMeta(cacheSkull.get(url));
-			return this;
-		}
-		final GameProfile profile = new GameProfile(UUID.randomUUID(), UUID.randomUUID().toString());
-		profile.getProperties().put("textures", new Property("textures", url));
-		final Field profileField;
-		try {
-			profileField = headMeta.getClass().getDeclaredField("profile");
-			profileField.setAccessible(true);
-			profileField.set(headMeta, profile);
-		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException ignored) {
-			return this;
-		}
-		is.setItemMeta(headMeta);
-		cacheSkull.put(url, headMeta);
 		return this;
 	}
 

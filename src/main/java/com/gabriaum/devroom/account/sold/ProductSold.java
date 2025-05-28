@@ -13,4 +13,5 @@ public class ProductSold {
     private final UUID purchasedById;
     private final String purchaseByName;
     private final double price;
+    private final long soldAt = System.currentTimeMillis();
 }
