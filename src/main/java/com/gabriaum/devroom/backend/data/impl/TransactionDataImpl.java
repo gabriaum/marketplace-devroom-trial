@@ -7,6 +7,7 @@ import com.gabriaum.devroom.backend.database.mongodb.MongoConnection;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import org.yaml.snakeyaml.error.Mark;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,6 +40,13 @@ public class TransactionDataImpl implements TransactionData {
             ProductSold productSold = MarketMain.GSON.fromJson(document.toJson(), ProductSold.class);
             products.add(productSold);
         }
+
+        for (Document document : collection.find(new Document("product.announceById", uniqueId.toString()))) {
+            ProductSold productSold = MarketMain.GSON.fromJson(document.toJson(), ProductSold.class);
+            if (!products.contains(productSold))
+                products.add(productSold);
+        }
+
         return products;
     }
 

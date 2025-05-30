@@ -39,7 +39,6 @@ public class ItemBuilder {
 
 	public ItemBuilder(Material m, int quantia) {
 		is = new ItemStack(m, quantia);
-
 	}
 
 	public ItemBuilder(Material m, int quantia, byte durabilidade) {

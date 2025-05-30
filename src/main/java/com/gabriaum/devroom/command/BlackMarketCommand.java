@@ -6,6 +6,7 @@ import com.gabriaum.devroom.util.command.Command;
 import com.gabriaum.devroom.util.command.CommandArgs;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class BlackMarketCommand {
@@ -13,8 +14,8 @@ public class BlackMarketCommand {
     @Command(name = "blackmarket", permission = " marketplace.blackmarket", inGameOnly = true)
     public void blackMarketCommand(CommandArgs commandArgs) {
         Player player = commandArgs.getPlayer();
-        MarketMain.getInstance().getViewFrame().open(BlackMarketInventory.class, player, Map.of("items", MarketMain.getInstance().getProductController()
+        MarketMain.getInstance().getViewFrame().open(BlackMarketInventory.class, player, Map.of("items", new ArrayList<>(MarketMain.getInstance().getProductController()
                 .stream().filter(product -> !product.getAnnounceById().equals(player.getUniqueId()))
-                .toList()));
+                .toList())));
     }
 }

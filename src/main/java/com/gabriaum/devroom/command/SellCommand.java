@@ -42,7 +42,7 @@ public class SellCommand {
         }
 
         ItemStack item = player.getInventory().getItemInMainHand();
-        if (item.getType().isAir()) {
+        if (item == null || !item.getType().isSolid()) {
             player.sendMessage(messages.getString("command.sell.no_item", "§cYou must hold an item in your hand to announce!"));
             return;
         }
